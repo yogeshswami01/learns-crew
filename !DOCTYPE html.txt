@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>File Upload | Learnscrew</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .upload-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input[type="file"] {
+      margin: 15px 0;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="upload-box">
+    <h2>Upload File</h2>
+    <input type="file" id="fileInput" />
+    <br>
+    <button onclick="uploadFile()">Upload</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const message = document.getElementById("message");
+
+      if (!fileInput.files.length) {
+        message.style.color = "red";
+        message.innerText = "Please select a file!";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      try {
+        const response = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+
+        message.style.color = "green";
+        message.innerText = result.message;
+      } catch (error) {
+        message.style.color = "red";
+        message.innerText = "Upload failed!";
+      }
+    }
+  </script>
+
+</body>
+</html>
